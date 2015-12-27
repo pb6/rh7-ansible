@@ -1,0 +1,4 @@
+[{{ item }}]
+{% for v in phpfpm_sites[item] %}
+{{ v.replace(" ", " = ") }}
+{% endfor %}

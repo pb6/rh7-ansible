@@ -1,0 +1,19 @@
+- name: add epel repo
+  yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=installed
+
+- name: add ghettoforge repo
+  yum: name=http://mirror.symnds.com/distributions/gf/el/7/gf/x86_64/gf-release-7-8.gf.el7.noarch.rpm state=installed
+
+- name: ghettoforge config
+  template: src=gf.j2 dest=/etc/yum.repos.d/gf.repo
+
+- name: ghettoforge include config
+  template: src=gf-plus-includes.j2 dest=/etc/sysconfig/gf-plus.includes
+
+- name: postgres repo
+  yum: name=http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-2.noarch.rpm state=installed
+
+- name: Install PostgreSQL server
+  yum: name={{ item }} state=installed
+  with_items:
+  - postgresql94-server

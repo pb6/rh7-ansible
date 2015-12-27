@@ -1,0 +1,8 @@
+---
+
+- name: create database
+  postgresql_db: name={{ pg_db }}
+                 encoding='UTF-8'
+
+- name: create user {{ pg_user }}
+  postgresql_user: db={{ pg_db }}  name={{ pg_user }} password={{ pg_pwd }} priv=ALL
