@@ -1,11 +1,16 @@
 ---
 
+yum_fm_pref_mirror: centos.mirror.serveriai.lt
+yum_fm_pref_tld: lt
+yum_fm_maxhostfileage: 2592000
+
 ghettoforge: gf-plus
 ghettopkgs:
   - dovecot22*
   - postfix3*
   - nginx*
 
+pg_ver: 9.4
 pg_repo: pgdg94
 pg_data_dir: /var/lib/pgsql/9.4/data
 pg_service: postgresql-9.4

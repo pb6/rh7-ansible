@@ -1,3 +1,6 @@
+- name: drop yum-fastestmirror config
+  template: src=fastestmirror.conf.j2 dest=/etc/yum/pluginconf.d/fastestmirror.conf
+
 - name: add epel repo
   yum: name=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm state=installed
 
@@ -11,9 +14,4 @@
   template: src=gf-plus-includes.j2 dest=/etc/sysconfig/gf-plus.includes
 
 - name: postgres repo
-  yum: name=http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-centos94-9.4-2.noarch.rpm state=installed
-
-- name: Install PostgreSQL server
-  yum: name={{ item }} state=installed
-  with_items:
-  - postgresql94-server
+  yum: name=http://yum.postgresql.org/{{ pg_ver }}/redhat/rhel-7-x86_64/pgdg-centos94-{{ pg_ver }}-2.noarch.rpm state=installed
