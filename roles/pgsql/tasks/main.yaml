@@ -6,13 +6,13 @@
     - python-psycopg2
 
 - name: check if db exists
-  command: test -d {{ pg_data_dir }}
+  shell: test "0" = $( ls {{ pg_data_dir }} | wc -l )
   register: result
   ignore_errors: True
 
 - name: initialize db
   command: /usr/pgsql-9.4/bin/postgresql94-setup initdb
-  when: "result.rc != 0"
+  when: "result.rc == 0"
 
 - name: pg_hba config
   template: src=pg_hba.j2 dest=/var/lib/pgsql/9.4/data/pg_hba.conf mode=0640 owner=postgres group=postgres
