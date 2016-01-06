@@ -10,6 +10,7 @@
   - pgsql
   - nginx
   - php
+  - postfixadmin
 
 - name: pgsql create user/db
   hosts: all

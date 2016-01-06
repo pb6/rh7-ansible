@@ -1,0 +1,23 @@
+---
+- name: download latest version
+  command: curl -s -L -J -o /tmp/postfixadmin.tar.gz 'http://sourceforge.net/projects/postfixadmin/files/latest/download?source=files'
+
+- name: create group for postfixadmin
+  group: name=webpfadm gid=550 state=present
+
+- name: create user for postfixadmin
+  user: name=webpfadm comment="postfixadmin" uid=550 group=webpfadm shell=/sbin/nologin home=/var/www/pfadm createhome=no
+
+- name: create /var/www
+  file: path=/var/www state=directory owner=root group=root mode=0755
+
+- command: test -d /var/www/{{ pfver }}
+  register: result
+  ignore_errors: true
+
+- name: unpack postfixadmin
+  unarchive: src=/tmp/postfixadmin.tar.gz dest=/var/www group=root owner=root copy=no
+  when: "result.rc != 0"
+
+- name: create /var/www/pfadm
+  file: dest=/var/www/{{ pflink }} src=/var/www/{{ pfver }} state=link owner=root group=root mode=0755 
