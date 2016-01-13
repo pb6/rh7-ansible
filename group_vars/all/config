@@ -1,0 +1,98 @@
+---
+
+yum_fm_pref_mirror: centos.mirror.serveriai.lt
+yum_fm_pref_tld: lt
+yum_fm_maxhostfileage: 2592000
+
+ghettoforge: gf-plus
+ghettopkgs:
+  - dovecot22*
+  - postfix3*
+  - nginx*
+
+pg_ver: 9.5
+pg_repo: pgdg95
+pg_data_dir: /var/lib/pgsql/9.5/data
+pg_service: postgresql-9.5
+pg_conn_method: md5
+pg_socket_perms: 0770
+pg_log_dest: syslog
+pg_log_collect: on
+pg_syslog_facility: LOCAL0
+pg_log_statement: all
+pg_log_tz: Europe/Vilnius
+pg_track_activities: on
+pg_track_counts: on
+pg_proc_title: on
+pg_log_statement_stats: on
+pg_autovacuum: on
+
+pg_db: xyz
+pg_user: 
+pg_pwd:
+
+nginx_binary_name: "nginx"
+nginx_service_name: "{{nginx_binary_name}}"
+nginx_user: nginx
+nginx_group: "{{ nginx_user }}"
+nginx_pid_file: "/var/run/{{nginx_service_name}}.pid"
+nginx_worker_processes: 1
+nginx_worker_rlimit_nofile: 1024
+nginx_conf_dir: /etc/nginx
+nginx_log_dir: "/var/log/nginx"
+nginx_events_params:
+  - worker_connections "{% if nginx_max_clients is defined %}{{nginx_max_clients}}{% else %}512{% endif %}"
+
+nginx_http_params:
+  - sendfile on
+  - access_log /var/log/nginx/access.log
+  - tcp_nopush "on"
+  - tcp_nodelay "on"
+  - keepalive_timeout "65"
+  - access_log "{{nginx_log_dir}}/access.log"
+  - error_log "{{nginx_log_dir}}/error.log"
+  - server_tokens off
+
+nginx_sites:
+  default:
+    - listen 80
+    - server_name _
+    - root "/usr/share/nginx/html"
+    - index index.html
+    - location ~ \.php$ {
+        root           /usr/share/nginx/html;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+      }
+
+nginx_configs:
+  proxy:
+    - proxy_set_header X-Real-IP  $remote_addr
+    - proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for
+
+nginx_remove_sites: []
+
+php_service: php-fpm
+phpfpm_conf_dir: /etc/php-fpm.d
+phpfpm_remove_sites: []
+phpfpm_sites:
+  www:
+    - listen 127.0.0.1:9000
+    - listen.allowed_clients 127.0.0.1
+    - user apache
+    - group apache
+    - pm dynamic
+    - pm.max_children 20
+    - pm.start_servers 3
+    - pm.min_spare_servers 2
+    - pm.max_spare_servers 7
+    - slowlog /var/log/php-fpm/www-slow.log
+    - php_admin_value[error_log] /var/log/php-fpm/www-error.log
+    - php_admin_flag[log_errors] on
+    - php_value[session.save_handler] files
+    - php_value[session.save_path] /var/lib/php/session
+
+pfver: postfixadmin-2.93
+pflink: pfadm
