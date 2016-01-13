@@ -19,7 +19,7 @@
   notify: restart postgresql service 
 
 - name: postgresql config
-  template: src=postgresql.j2 dest=/var/lib/pgsql/{{ pg_ver }}/data/postgresql.conf mode=0640 owner=postgres group=postgres
+  template: src=postgresql.j2 dest=/var/lib/pgsql/{{ pg_ver }}/data/postgresql.conf mode=0640 owner={{ pg_sys_user }} group={{ pg_sys_group }}
   notify: restart postgresql service 
 
 - name: Start postgresql service

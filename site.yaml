@@ -16,8 +16,8 @@
   hosts: all
   remote_user: paulius
   become: yes
-  become_user: postgres
+  become_user: "{{ pg_sys_user }}"
   gather_facts: no
 
   roles:
-  - pgsql_config
+  - { role: pgsql_config, pg_db: "{{ pf_db }}", pg_user: "{{ pf_pg_user }}", pg_pwd:  "{{ pf_pg_pwd }}" }

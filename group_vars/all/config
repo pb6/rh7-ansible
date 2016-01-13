@@ -15,6 +15,8 @@ pg_v: "{{ pg_ver | replace('.','') }}"
 pg_repo: pgdg{{ pg_v }}
 pg_data_dir: /var/lib/pgsql/{{ pg_ver }}/data
 pg_service: postgresql-{{ pg_ver }}
+pg_sys_user: postgres
+pg_sys_group: postgres
 pg_conn_method: md5
 pg_socket_perms: 0770
 pg_log_dest: syslog
@@ -29,7 +31,7 @@ pg_log_statement_stats: on
 pg_autovacuum: on
 
 pg_db: xyz
-pg_user: 
+pg_user:
 pg_pwd:
 
 nginx_binary_name: "nginx"
@@ -97,3 +99,6 @@ phpfpm_sites:
 
 pfver: postfixadmin-2.93
 pflink: pfadm
+pf_db:
+pf_pg_user:
+pf_pg_pwd:
