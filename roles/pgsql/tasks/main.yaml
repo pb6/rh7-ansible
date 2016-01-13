@@ -2,24 +2,24 @@
 - name: Install PostgreSQL server
   yum: name={{ item }} state=present enablerepo={{ pg_repo }}
   with_items:
-    - postgresql94-server
+    - postgresql{{ pg_v }}-server
     - python-psycopg2
 
 - name: check if db exists
   shell: test "0" = $( ls {{ pg_data_dir }} | wc -l )
   register: result
-  ignore_errors: True
+  failed_when: "result.rc == 2"
 
 - name: initialize db
-  command: /usr/pgsql-9.4/bin/postgresql94-setup initdb
+  command: /usr/pgsql-{{ pg_ver }}/bin/postgresql{{ pg_v }}-setup initdb
   when: "result.rc == 0"
 
 - name: pg_hba config
-  template: src=pg_hba.j2 dest=/var/lib/pgsql/9.4/data/pg_hba.conf mode=0640 owner=postgres group=postgres
+  template: src=pg_hba.j2 dest=/var/lib/pgsql/{{ pg_ver }}/data/pg_hba.conf mode=0640 owner=postgres group=postgres
   notify: restart postgresql service 
 
 - name: postgresql config
-  template: src=postgresql.j2 dest=/var/lib/pgsql/9.4/data/postgresql.conf mode=0640 owner=postgres group=postgres
+  template: src=postgresql.j2 dest=/var/lib/pgsql/{{ pg_ver }}/data/postgresql.conf mode=0640 owner=postgres group=postgres
   notify: restart postgresql service 
 
 - name: Start postgresql service

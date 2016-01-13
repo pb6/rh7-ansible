@@ -11,9 +11,10 @@ ghettopkgs:
   - nginx*
 
 pg_ver: 9.5
-pg_repo: pgdg95
-pg_data_dir: /var/lib/pgsql/9.5/data
-pg_service: postgresql-9.5
+pg_v: "{{ pg_ver | replace('.','') }}"
+pg_repo: pgdg{{ pg_v }}
+pg_data_dir: /var/lib/pgsql/{{ pg_ver }}/data
+pg_service: postgresql-{{ pg_ver }}
 pg_conn_method: md5
 pg_socket_perms: 0770
 pg_log_dest: syslog
